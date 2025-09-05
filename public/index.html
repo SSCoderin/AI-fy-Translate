@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Translation - Hindi to Marathi</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎬 Video Translation Service</h1>
+        <p>
+          Translate Hindi videos to Marathi with AI-powered text and audio
+          translation
+        </p>
+      </header>
+
+      <main>
+        <!-- Upload Section -->
+        <section class="upload-section">
+          <div class="upload-card">
+            <h2>📤 Upload Video</h2>
+
+            <form id="uploadForm" enctype="multipart/form-data">
+              <div class="file-input-container">
+                <input
+                  type="file"
+                  id="videoFile"
+                  name="video"
+                  accept="video/*"
+                  required
+                />
+                <label for="videoFile" class="file-input-label">
+                  <span class="file-icon">📁</span>
+                  <span class="file-text">Choose Video File</span>
+                  <span class="file-subtext"
+                    >MP4, AVI, MOV, WMV, WebM (max 100MB)</span
+                  >
+                </label>
+              </div>
+
+              <div
+                class="selected-file"
+                id="selectedFile"
+                style="display: none"
+              >
+                <div class="file-info">
+                  <span class="file-name" id="fileName"></span>
+                  <span class="file-size" id="fileSize"></span>
+                </div>
+              </div>
+
+              <!-- Moving Text Option -->
+              <div class="option-container">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="movingText" name="movingText" />
+                  <span class="checkmark"></span>
+                  <span class="checkbox-label">
+                    <strong>Moving Text Mode</strong>
+                    <span class="checkbox-description"
+                      >Check if your video contains text that moves across the
+                      screen</span
+                    >
+                  </span>
+                </label>
+              </div>
+
+              <!-- Advanced OCR Option -->
+              <div class="option-container">
+                <label class="checkbox-container">
+                  <input
+                    type="checkbox"
+                    id="advancedOcr"
+                    name="advancedOcr"
+                    checked
+                  />
+                  <span class="checkmark"></span>
+                  <span class="checkbox-label">
+                    <strong>Advanced OCR Mode</strong>
+                    <span class="checkbox-description"
+                      >Enable image preprocessing and optimized OCR parameters
+                      for better text detection</span
+                    >
+                  </span>
+                </label>
+              </div>
+
+              <button type="submit" class="upload-btn" id="uploadBtn">
+                <span class="btn-text">Start Translation</span>
+                <div class="spinner" style="display: none"></div>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Status Section -->
+        <section
+          class="status-section"
+          id="statusSection"
+          style="display: none"
+        >
+          <div class="status-card">
+            <h2>📊 Translation Status</h2>
+
+            <div class="job-info">
+              <div class="job-detail">
+                <span class="label">Original File:</span>
+                <span class="value" id="originalFileName">-</span>
+              </div>
+              <div class="job-detail">
+                <span class="label">Video ID:</span>
+                <span class="value" id="videoId">-</span>
+              </div>
+              <div class="job-detail">
+                <span class="label">Job ID:</span>
+                <span class="value" id="jobId">-</span>
+              </div>
+            </div>
+
+            <div class="status-display">
+              <div class="status-indicator">
+                <div class="status-icon" id="statusIcon">⏳</div>
+                <div class="status-text">
+                  <div class="status-main" id="statusMain">Processing...</div>
+                  <div class="status-sub" id="statusSub">
+                    Starting translation...
+                  </div>
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <button class="check-btn" id="checkStatusBtn">
+                🔄 Check Status
+              </button>
+              <button
+                class="download-btn"
+                id="downloadBtn"
+                style="display: none"
+              >
+                📥 Download Result
+              </button>
+              <button class="new-translation-btn" id="newTranslationBtn">
+                🔄 New Translation
+              </button>
+            </div>
+
+            <div
+              class="result-section"
+              id="resultSection"
+              style="display: none"
+            >
+              <h3>✅ Translation Complete!</h3>
+              <div class="result-info">
+                <div class="result-detail">
+                  <span class="label">Output Video Path:</span>
+                  <span class="value" id="outputPath">-</span>
+                </div>
+                <div class="result-detail">
+                  <span class="label">Completed At:</span>
+                  <span class="value" id="completedAt">-</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="error-section" id="errorSection" style="display: none">
+              <h3>❌ Translation Failed</h3>
+              <div class="error-message" id="errorMessage">-</div>
+            </div>
+          </div>
+        </section>
+        <section
+          class="editing-section"
+          id="editingSection"
+          style="display: none"
+        >
+          <div class="editing-card">
+            <h2>✏️ Edit Translations</h2>
+
+            <!-- Audio Translation Panel -->
+            <div class="audio-panel">
+              <h3>🎵 Audio Translation</h3>
+
+              <div class="audio-controls">
+                <button class="audio-btn" id="playOriginalBtn">
+                  🔊 Original Hindi
+                </button>
+                <button class="audio-btn" id="playVoiceBtn">
+                  🎤 Voice Only
+                </button>
+                <button class="audio-btn" id="playMusicBtn">
+                  🎶 Music Only
+                </button>
+              </div>
+
+              <div class="translation-panels">
+                <div class="panel hindi-panel">
+                  <h4>Hindi Transcription</h4>
+                  <textarea id="hindiTranscription" readonly></textarea>
+                </div>
+                <div class="panel marathi-panel">
+                  <h4>Marathi Translation (Editable)</h4>
+                  <textarea
+                    id="marathiAudioTranslation"
+                    placeholder="Edit Marathi audio translation..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Translation Panel -->
+            <div class="text-panel">
+              <h3>📝 Text Translations</h3>
+              <div id="textTranslationsList" class="text-translations-list">
+                <!-- Text translations will be populated here -->
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="editing-actions">
+              <button class="save-btn" id="saveTranslationsBtn">
+                💾 Save Changes
+              </button>
+              <button class="generate-btn" id="generateFinalBtn">
+                🎬 Generate Final Video
+              </button>
+              <button class="preview-btn" id="previewBtn">
+                👁️ Preview Changes
+              </button>
+            </div>
+
+            <div class="final-status" id="finalStatus" style="display: none">
+              <div class="status-indicator">
+                <div class="status-icon" id="finalStatusIcon">⏳</div>
+                <div class="status-text">
+                  <div class="status-main" id="finalStatusMain">
+                    Generating...
+                  </div>
+                  <div class="status-sub" id="finalStatusSub">
+                    Creating final video...
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Jobs History Section -->
+        <section class="history-section">
+          <div class="history-card">
+            <h2>📝 Recent Jobs</h2>
+            <button class="refresh-btn" id="refreshJobsBtn">🔄 Refresh</button>
+
+            <div class="jobs-list" id="jobsList">
+              <div class="no-jobs">
+                No translation jobs yet. Upload a video to get started!
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>Powered by AI • OpenAI GPT-4 + Google Cloud TTS • Made with ❤️</p>
+      </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing your video...</div>
+        <div class="loading-subtext">This may take several minutes</div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
